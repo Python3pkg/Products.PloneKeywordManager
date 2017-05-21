@@ -3,6 +3,7 @@
 # $Id: tool.py 47645 2007-08-20 14:59:10Z glenfant $
 
 import pkg_resources
+import collections
 
 # Python imports
 try:
@@ -174,7 +175,7 @@ class PloneKeywordManager(UniqueObject, SimpleItem):
     def getKeywords(self, context=None, indexName='Subject'):
         self._checkPermission(context)
         if indexName not in self.getKeywordIndexes():
-            raise ValueError, "%s is not a valid field" % indexName
+            raise ValueError("%s is not a valid field" % indexName)
 
         catalog = getToolByName(self, 'portal_catalog')
         keywords = list(catalog.uniqueValuesFor(indexName))
@@ -197,7 +198,7 @@ class PloneKeywordManager(UniqueObject, SimpleItem):
 
         # Search for all similar terms in possibilities
         if isinstance(word, str):
-            oword = unicode(word, 'utf-8')
+            oword = str(word, 'utf-8')
         else:
             oword = word.encode('utf-8')
 
@@ -207,7 +208,7 @@ class PloneKeywordManager(UniqueObject, SimpleItem):
             elif isinstance(item, type(oword)):
                 lscore = Levenshtein.ratio(oword, item)
             else:
-                raise ValueError, "%s is not a normal, or unicode string" % item
+                raise ValueError("%s is not a normal, or unicode string" % item)
             if lscore > score:
                 res.append((item, lscore))
 
@@ -302,7 +303,7 @@ class PloneKeywordManager(UniqueObject, SimpleItem):
             fieldName = fieldName[0].lower() + fieldName[1:]
             fieldVal = getattr(obj, fieldName, ())
 
-        if callable(fieldVal):
+        if isinstance(fieldVal, collections.Callable):
             return fieldVal()
         else:
             return fieldVal

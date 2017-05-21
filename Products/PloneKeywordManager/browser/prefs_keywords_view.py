@@ -28,18 +28,18 @@ class PrefsKeywordsView(BrowserView):
         field = self.request.get('field', None)
 
         if not keywords:
-            message = _(u'Please select at least one keyword')
+            message = _('Please select at least one keyword')
             return self.doReturn(message, 'error', field=field)
 
         if not field or field not in pkm.getKeywordIndexes():
-            message = _(u'Please select a valid keyword field')
+            message = _('Please select a valid keyword field')
             return self.doReturn(message, 'error', field=field)
 
         if 'form.button.Merge' in self.request.form:
             # We should assume there is a 'changeto' filled
             changeto = self.request.get('changeto', None)
             if not changeto:
-                message = _(u'Please provide a new term')
+                message = _('Please provide a new term')
                 return self.doReturn(message, 'error', field=field)
 
             return self.changeKeywords(keywords, changeto, field)
@@ -53,7 +53,7 @@ class PrefsKeywordsView(BrowserView):
         pkm = getToolByName(self.context, 'portal_keyword_manager')
         changed_objects = pkm.change(keywords, changeto, context=self.context, indexName=field)
 
-        msg = _('msg_changed_keywords', default=u"Changed ${from} to ${to} for ${num} object(s).",
+        msg = _('msg_changed_keywords', default="Changed ${from} to ${to} for ${num} object(s).",
                 mapping={'from': ','.join(keywords).decode('utf-8'),
                          'to': changeto.decode('utf-8'),
                          'num': changed_objects})
@@ -68,7 +68,7 @@ class PrefsKeywordsView(BrowserView):
         pkm = getToolByName(self.context, "portal_keyword_manager")
         deleted_objects = pkm.delete(keywords, context=self.context, indexName=field)
 
-        msg = _('msg_deleted_keywords', default=u"Deleted ${keywords} for ${num} object(s).",
+        msg = _('msg_deleted_keywords', default="Deleted ${keywords} for ${num} object(s).",
                 mapping={'keywords': ','.join(keywords).decode('utf-8'),
                          'num': deleted_objects})
 
